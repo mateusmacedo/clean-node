@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "git-commit-msg-linter": "^2.4.2",
+    "@types/node": "^13.9.1"
+  }
 }
