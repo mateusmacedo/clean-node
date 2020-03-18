@@ -1,6 +1,8 @@
+import { HttpRequest, HttpResponse } from '../protocols/http'
+
 export class SignUpController {
-  handler (httpRequest: any): any {
-    let body = null
+  handler (httpRequest: HttpRequest): HttpResponse {
+    let body
     if (!httpRequest.body.name) {
       body = new Error('Missing param: name')
     } else {
