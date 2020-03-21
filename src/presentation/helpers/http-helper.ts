@@ -1,7 +1,7 @@
-import { HttpResponse } from '../protocols/http'
+import { HttpResponse } from '../protocols'
 import { ServerError } from '../erros'
 
-export const httpCreated = (data: any): HttpResponse => ({
+export const createdRequest = (data: any): HttpResponse => ({
   statusCode: 201,
   body: data
 })
