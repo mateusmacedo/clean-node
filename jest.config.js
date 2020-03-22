@@ -1,6 +1,5 @@
 module.exports = {
-  roots: ['<rootDir>/src'],
-  coverageReporters: ['json', 'text'],
+  coverageReporters: ['json'],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
