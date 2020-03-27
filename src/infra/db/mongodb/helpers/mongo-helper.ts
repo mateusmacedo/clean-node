@@ -12,7 +12,13 @@ export const MongoHelper = {
     await this.client.close()
   },
 
-  getCollection (name: string): Collection {
-    return this.client.db().collection(name)
+  async getCollection (name: string): Promise<Collection> {
+    return new Promise(resolve => resolve(this.client.db().collection(name)))
+  },
+
+  async map (collection: any): Promise<any> {
+    const { _id, ...collectionWithOutId } = collection
+    const model = Object.assign({}, collectionWithOutId, { id: _id })
+    return new Promise(resolve => resolve(model))
   }
 }
