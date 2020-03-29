@@ -1,0 +1,66 @@
+version: "3"
+services:
+  postgressql:
+    image: postgres
+    hostname: postgressql
+    container_name: postgressql
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Secret*123
+    expose:
+      - 5432
+    volumes:
+      - ./docker/volumes/postgressql/data:/var/lib/postgres/data
+    networks:
+      net:
+        ipv4_address: 172.0.0.13
+  mongodb:
+    image: mongo
+    hostname: mongodb
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Secret*123
+      MONGO_INITDB_DATABASE: users
+    ports:
+      - 27017
+    volumes:
+      - ./docker/volumes/mongodb/data:/data/db
+      - ./docker/mongo:/docker-entrypoint-initdb.d
+    networks:
+      net:
+        ipv4_address: 172.0.0.14
+  redis:
+    image: redis
+    hostname: redis
+    container_name: redis
+    restart: always
+    volumes:
+      - ./docker/volumes/redis:/var/lib/redis
+    expose:
+      - 6379
+    networks:
+      net:
+        ipv4_address: 172.0.0.15
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    expose:
+      - 15672
+    volumes:
+      - ./docker/volumes/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=Secret*123
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=Secret*123
+    networks:
+      net:
+        ipv4_address: 172.0.0.16
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.0.0.0/24
