@@ -1,6 +1,9 @@
 module.exports = {
   coverageReporters: ['json'],
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/**/server.ts'
+  ],
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
   transform: {

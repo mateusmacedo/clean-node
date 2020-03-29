@@ -17,6 +17,6 @@ describe('SignUp Routes', () => {
         email: 'macedodosanjosmateus@gmail.com',
         password: 'secret*123',
         passwordConfirmation: 'secret*123'
-      }).expect(200)
+      }).expect(201)
   })
 })
