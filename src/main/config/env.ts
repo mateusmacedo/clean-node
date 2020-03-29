@@ -8,6 +8,9 @@ export default {
     host: process.env.HOST,
     port: process.env.PORT || 3000
   },
+  security: {
+    salt: Number(process.env.SALT_DEFAULT)
+  },
   infra: {
     noSql: {
       host: process.env.NOSQL_HOST,
