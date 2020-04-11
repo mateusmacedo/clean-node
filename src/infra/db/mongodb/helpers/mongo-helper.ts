@@ -2,7 +2,9 @@ import { Collection, MongoClient } from 'mongodb'
 
 export const MongoHelper = {
   client: null as MongoClient,
+  uri: null as string,
   async connect (uri: string): Promise<void> {
+    this.uri = uri
     this.client = await MongoClient.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -10,13 +12,17 @@ export const MongoHelper = {
   },
   async disconnect (): Promise<void> {
     await this.client.close()
+    this.client = null
   },
 
   async getCollection (name: string): Promise<Collection> {
-    return new Promise(resolve => resolve(this.client.db().collection(name)))
+    if (!this.client?.isConnected()) {
+      await this.connect(this.uri)
+    }
+    return this.client.db().collection(name)
   },
 
-  async map (collection: any): Promise<any> {
+  async map (collection: any): Promise<Object> {
     const { _id, ...collectionWithOutId } = collection
     const model = Object.assign({}, collectionWithOutId, { id: _id })
     return new Promise(resolve => resolve(model))

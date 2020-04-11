@@ -1,14 +1,14 @@
 module.exports = {
-  coverageReporters: ['json'],
+  testEnvironment: 'node',
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/server.ts'
   ],
+  testMatch: ['<rootDir>/tests/**/*.ts'],
+  coverageReporters: ['json'],
   coverageDirectory: 'coverage',
-  testEnvironment: 'node',
+  preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
-  },
-  preset: '@shelf/jest-mongodb',
-  testMatch: ['<rootDir>/tests/**/*.ts']
+  }
 }
