@@ -35,7 +35,7 @@ export class SignUpController implements Controller {
       return createdRequest(account)
     } catch (e) {
       // @todo log and error control system
-      return serverError()
+      return serverError(e)
     }
   }
 }

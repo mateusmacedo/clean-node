@@ -22,7 +22,7 @@ export const MongoHelper = {
     return this.client.db().collection(name)
   },
 
-  async map (collection: any): Promise<Object> {
+  async map (collection: any): Promise<any> {
     const { _id, ...collectionWithOutId } = collection
     const model = Object.assign({}, collectionWithOutId, { id: _id })
     return new Promise(resolve => resolve(model))
