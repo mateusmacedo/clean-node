@@ -161,7 +161,7 @@ describe('User Controller', () => {
     }
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body).toEqual(new ServerError('any_stack_error'))
   })
   test('Should return 500 if addAccounts throws', async () => {
     const { sut, addAccountStub } = makeSut()
@@ -180,7 +180,7 @@ describe('User Controller', () => {
     }
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body).toEqual(new ServerError('any_stack_error'))
   })
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
