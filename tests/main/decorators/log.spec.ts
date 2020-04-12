@@ -1,4 +1,4 @@
-import { LogErrorRepository } from '../../../src/data/protocols/log-error-repository'
+import { LogErrorRepository } from '../../../src/data/protocols'
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator'
 import { serverError } from '../../../src/presentation/helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols'
@@ -8,6 +8,15 @@ interface SutTypes {
   controllerStub: Controller
   logErrorRepositoryStub: LogErrorRepository
 }
+
+const makeFakeHttpRequest = (): HttpRequest => ({
+  body: {
+    name: 'any_value',
+    email: 'any_value@mail.com,',
+    password: 'any_value',
+    passwordConfirmation: 'any_value'
+  }
+})
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
@@ -49,27 +58,13 @@ describe('Log Decorator', () => {
   test('Should call controller handle with correct values', async () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handler')
-    const httpRequest = {
-      body: {
-        name: 'any_value',
-        email: 'any_value@mail.com,',
-        password: 'any_value',
-        passwordConfirmation: 'any_value'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handler(httpRequest)
     expect(handleSpy).toHaveBeenCalledWith(httpRequest)
   })
   test('Should return the same result of the controller', async () => {
     const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        name: 'any_value',
-        email: 'any_value@mail.com,',
-        password: 'any_value',
-        passwordConfirmation: 'any_value'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse).toEqual({
       statusCode: 200,
@@ -89,14 +84,7 @@ describe('Log Decorator', () => {
     const error = serverError(fakeError)
     jest.spyOn(controllerStub, 'handler')
       .mockReturnValueOnce(new Promise(resolve => resolve(error)))
-    const httpRequest = {
-      body: {
-        name: 'any_value',
-        email: 'any_value@mail.com,',
-        password: 'any_value',
-        passwordConfirmation: 'any_value'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handler(httpRequest)
     expect(logSpy).toHaveBeenCalledWith('any_stack')
   })
