@@ -42,16 +42,14 @@ const makeAddAccountRepository = (): AddAccountRepository => {
 
   return new AddAccountRepositoryStub()
 }
+
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter()
   const addAccountRepositoryStub = makeAddAccountRepository()
   const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
-  return {
-    sut,
-    encrypterStub,
-    addAccountRepositoryStub
-  }
+  return { sut, encrypterStub, addAccountRepositoryStub }
 }
+
 describe('DbAddAccount UseCase', () => {
   test('Should call Encrypter with correct password ', async () => {
     const { sut, encrypterStub } = makeSut()
