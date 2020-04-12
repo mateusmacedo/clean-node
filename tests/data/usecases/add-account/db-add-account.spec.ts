@@ -8,8 +8,15 @@ interface SutTypes {
   encrypterStub: Encrypter
   addAccountRepositoryStub: AddAccountRepository
 }
+
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
+const makeFakeAccountData = (): AddAccountModel => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'any_password'
@@ -29,7 +36,6 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = makeFakeAccount()
-      fakeAccount.password = 'hashed_password'
       return new Promise(resolve => resolve(fakeAccount))
     }
   }
@@ -50,47 +56,37 @@ describe('DbAddAccount UseCase', () => {
   test('Should call Encrypter with correct password ', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
-    const accountData = makeFakeAccount()
+    const accountData = makeFakeAccountData()
     await sut.add(accountData)
-    expect(encryptSpy).toHaveBeenCalledWith('any_password')
+    expect(encryptSpy).toHaveBeenCalledWith(accountData.password)
   })
   test('Should throws Encrypter if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     jest.spyOn(encrypterStub, 'encrypt')
       .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const accountData = makeFakeAccount()
+    const accountData = makeFakeAccountData()
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
   })
   test('Should call AddAccountRepository correct with values', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
-    const accountData = makeFakeAccount()
-    delete accountData.id
+    const accountData = makeFakeAccountData()
     await sut.add(accountData)
-    expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
-    })
+    expect(addSpy).toHaveBeenCalledWith(Object.assign({}, accountData, { password: 'hashed_password' }))
   })
   test('Should throws AddAccountRepository if AddAccountRepository throws', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     jest.spyOn(addAccountRepositoryStub, 'add')
       .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const accountData = makeFakeAccount()
+    const accountData = makeFakeAccountData()
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
   })
   test('Should return an Account on success', async () => {
     const { sut } = makeSut()
-    const accountData = makeFakeAccount()
+    const accountData = makeFakeAccountData()
     const account = await sut.add(accountData)
-    expect(account).toEqual({
-      id: 'any_id',
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
-    })
+    expect(account).toEqual(makeFakeAccount())
   })
 })
