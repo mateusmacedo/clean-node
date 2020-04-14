@@ -7,13 +7,15 @@ import { Controller } from '../../presentation/protocols'
 import { EmailValidatorAdapter } from '../../utils/email-validator-adapter'
 import env from '../config/env'
 import { LogControllerDecorator } from '../decorators/log-controller-decorator'
+import { makeSignUpValidation } from './signup-validation'
 
 export const makeSignupController = (): Controller => {
-  const emailValidator = new EmailValidatorAdapter()
   const encrypter = new BcryptAdapter(env.security.salt)
   const accountRepository = new AccountMongoRepository()
   const addAccount = new DbAddAccount(encrypter, accountRepository)
-  const controller = new SignUpController(emailValidator, addAccount)
+  const emailValidator = new EmailValidatorAdapter()
+  const validationComposite = makeSignUpValidation()
+  const controller = new SignUpController(emailValidator, addAccount, validationComposite)
   const logErrorRepository = new LogMongoRepository()
   return new LogControllerDecorator(controller, logErrorRepository)
 }
