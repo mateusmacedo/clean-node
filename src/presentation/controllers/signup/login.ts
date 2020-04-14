@@ -13,4 +13,5 @@ export class LoginController implements Controller {
     }
 
     return new Promise(resolve => resolve(response))
-  }}
+  }
+}
