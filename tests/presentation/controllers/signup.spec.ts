@@ -15,8 +15,8 @@ import {
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
+    async isValid (email: string): Promise<boolean> {
+      return new Promise(resolve => resolve(true))
     }
   }
 
@@ -84,7 +84,7 @@ describe('User Controller', () => {
   })
   test('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut()
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(new Promise(resolve => resolve(false)))
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
