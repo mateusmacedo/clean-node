@@ -1,3 +1,4 @@
+import { Authentication } from '../../../src/domain/usercases/authentication'
 import { LoginController } from '../../../src/presentation/controllers/signup/login'
 import { InvalidParamError, MissingParamError, ServerError } from '../../../src/presentation/erros'
 import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
@@ -7,6 +8,7 @@ import { EmailValidator } from '../../../src/presentation/protocols/email-valida
 interface SutTypes {
   sut: LoginController
   emailValidatorStub: EmailValidator
+  authenticationStub: Authentication
 }
 
 const makeRequest = (): HttpRequest => {
@@ -16,6 +18,16 @@ const makeRequest = (): HttpRequest => {
       password: 'any_password'
     }
   }
+}
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (email: string, password: string): Promise<string> {
+      return new Promise(resolve => resolve('jwt token'))
+    }
+  }
+
+  return new AuthenticationStub()
 }
 
 const makeEmailValidator = (): EmailValidator => {
@@ -30,8 +42,9 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const sut = new LoginController(emailValidatorStub)
-  return { sut, emailValidatorStub }
+  const authenticationStub = makeAuthentication()
+  const sut = new LoginController(emailValidatorStub, authenticationStub)
+  return { sut, emailValidatorStub, authenticationStub }
 }
 
 describe('Login Controller', () => {
@@ -72,5 +85,13 @@ describe('Login Controller', () => {
     const request = makeRequest()
     const response = await sut.handler(request)
     expect(response).toEqual(serverError(new ServerError('any_stack_error')))
+  })
+  test('Should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    const request = makeRequest()
+    const { email, password } = request.body
+    await sut.handler(request)
+    expect(authSpy).toHaveBeenCalledWith(email, password)
   })
 })
