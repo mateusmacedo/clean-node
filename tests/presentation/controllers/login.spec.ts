@@ -1,5 +1,9 @@
-import { Authentication } from '../../../src/domain/usercases/authentication'
-import { LoginController } from '../../../src/presentation/controllers/signup/login'
+import { LoginController } from '../../../src/presentation/controllers/login/login'
+import {
+  Authentication,
+  EmailValidator,
+  HttpRequest
+} from '../../../src/presentation/controllers/login/login-protocols'
 import {
   InvalidParamError,
   MissingParamError,
@@ -7,8 +11,6 @@ import {
   UnauthorizedError
 } from '../../../src/presentation/erros'
 import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
-import { HttpRequest } from '../../../src/presentation/protocols'
-import { EmailValidator } from '../../../src/presentation/protocols/email-validator'
 
 interface SutTypes {
   sut: LoginController
@@ -106,5 +108,16 @@ describe('Login Controller', () => {
     const request = makeFakeHttpRequest()
     const response = await sut.handler(request)
     expect(response).toEqual(badRequest(new UnauthorizedError()))
+  })
+  test('Should return 500 if authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(async () => {
+      return new Promise((resolve, reject) => {
+        reject(new Error())
+      })
+    })
+    const request = makeFakeHttpRequest()
+    const response = await sut.handler(request)
+    expect(response).toEqual(serverError(new ServerError('any_stack_error')))
   })
 })
