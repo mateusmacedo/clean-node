@@ -147,7 +147,7 @@ describe('User Controller', () => {
     delete expectAccount.id
     expect(addSpy).toHaveBeenCalledWith(expectAccount)
   })
-  test('Should return 200 if valid data is provided', async () => {
+  test('Should return 201 if valid data is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handler(httpRequest)
