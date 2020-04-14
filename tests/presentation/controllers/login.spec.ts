@@ -10,7 +10,7 @@ import {
   ServerError,
   UnauthorizedError
 } from '../../../src/presentation/erros'
-import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
+import { badRequest, okRequest, serverError } from '../../../src/presentation/helpers/http-helper'
 
 interface SutTypes {
   sut: LoginController
@@ -18,19 +18,17 @@ interface SutTypes {
   authenticationStub: Authentication
 }
 
-const makeFakeHttpRequest = (): HttpRequest => {
-  return {
-    body: {
-      email: 'any_email@mail.com',
-      password: 'any_password'
-    }
+const makeFakeHttpRequest = (): HttpRequest => ({
+  body: {
+    email: 'any_email@mail.com',
+    password: 'any_password'
   }
-}
+})
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (email: string, password: string): Promise<string> {
-      return new Promise(resolve => resolve('jwt token'))
+      return new Promise(resolve => resolve('any_token'))
     }
   }
 
@@ -119,5 +117,12 @@ describe('Login Controller', () => {
     const request = makeFakeHttpRequest()
     const response = await sut.handler(request)
     expect(response).toEqual(serverError(new ServerError('any_stack_error')))
+  })
+  test('Should return 200 if valid credentials is provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = makeFakeHttpRequest()
+    const httpResponse = await sut.handler(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse).toEqual(okRequest('any_token'))
   })
 })
