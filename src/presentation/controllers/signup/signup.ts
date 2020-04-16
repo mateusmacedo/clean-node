@@ -16,7 +16,8 @@ export class SignUpController implements Controller {
       if (requestHasError) {
         return badRequest(requestHasError)
       }
-      const account = await this.addAccount.add(httpRequest.body)
+      const { name, email, password } = httpRequest.body
+      const account = await this.addAccount.add({ name, email, password })
       return createdRequest(account)
     } catch (e) {
       // @todo log and error control system
