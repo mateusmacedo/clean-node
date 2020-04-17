@@ -1,7 +1,6 @@
 import { DbAddAccount } from '../../data/usecases/add-account/db-add-account'
 import { BcryptAdapter } from '../../infra/criptografy/bcrypt-adapter'
-import { AccountMongoRepository } from '../../infra/db/mongodb/repositories/account'
-import { LogMongoRepository } from '../../infra/db/mongodb/repositories/log'
+import { AccountMongoRepository, LogMongoRepository } from '../../infra/db/mongodb/repositories'
 import { SignUpController } from '../../presentation/controllers/signup/signup'
 import { Controller } from '../../presentation/protocols'
 import env from '../config/env'
