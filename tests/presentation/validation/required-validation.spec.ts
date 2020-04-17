@@ -1,5 +1,5 @@
 import { MissingParamError } from '../../../src/presentation/erros'
-import { RequiredFieldValidation } from '../../../src/presentation/validation/required-field-validation'
+import { RequiredFieldValidation } from '../../../src/presentation/validation'
 
 const makeFakeInput = (): any => ({
   name: 'any_name',

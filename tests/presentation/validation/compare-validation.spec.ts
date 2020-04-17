@@ -1,5 +1,5 @@
 import { InvalidParamError } from '../../../src/presentation/erros'
-import { CompareFieldValidation } from '../../../src/presentation/validation/compare-field-validation'
+import { CompareFieldValidation } from '../../../src/presentation/validation'
 
 const makeFakeInput = (): any => ({
   param: 'any_value',
