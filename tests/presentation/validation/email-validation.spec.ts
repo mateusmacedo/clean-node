@@ -45,6 +45,12 @@ describe('Email Validation', () => {
     const result = await sut.validate(input)
     expect(result).toEqual(new InvalidParamError('email'))
   })
+  test('Should not return if validation email succeds', async () => {
+    const { sut } = makeSut()
+    const input = makeFakeInput()
+    const result = await sut.validate(input)
+    expect(result).toBeFalsy()
+  })
   test('Should throw if email validator throws', async () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {

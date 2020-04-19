@@ -10,20 +10,29 @@ interface SutTypes {
   sut: CompareFieldValidation
 }
 
-const makeSut = (): SutTypes => {
-  const sut = new CompareFieldValidation('param', 'paramConfirmation')
+const makeSut = (param: string, paramToCompare: string): SutTypes => {
+  const sut = new CompareFieldValidation(param, paramToCompare)
   return { sut }
 }
 
-describe('Required Validation', () => {
+describe('Compare Validation', () => {
   test('Should return error InvalidParamError if validation fail', async () => {
-    const { sut } = makeSut()
+    const { sut } = makeSut('param', '')
     const input = makeFakeInput()
     const result = await sut.validate(input)
     expect(result).toEqual(new InvalidParamError('param'))
   })
+  test('Should not return if validation succeds', async () => {
+    const { sut } = makeSut('name', 'paramConfirmation')
+    jest.spyOn(sut, 'validate').mockImplementationOnce(async () => {
+      return new Promise(resolve => resolve(null))
+    })
+    const input = makeFakeInput()
+    const result = await sut.validate(input)
+    expect(result).toBeFalsy()
+  })
   test('Should throw if email validator throws', async () => {
-    const { sut } = makeSut()
+    const { sut } = makeSut('name', 'paramConfirmation')
     jest.spyOn(sut, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })

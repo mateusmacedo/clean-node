@@ -12,20 +12,26 @@ interface SutTypes {
   sut: RequiredFieldValidation
 }
 
-const makeSut = (): SutTypes => {
-  const sut = new RequiredFieldValidation('param')
+const makeSut = (field: string): SutTypes => {
+  const sut = new RequiredFieldValidation(field)
   return { sut }
 }
 
-describe('Required Validation', () => {
-  test('Should return error MissingParamError if validation fail', async () => {
-    const { sut } = makeSut()
+describe('Required Field Validation', () => {
+  test('Should return MissingParamError if validation fail', async () => {
+    const { sut } = makeSut('paramRequired')
     const input = makeFakeInput()
     const result = await sut.validate(input)
-    expect(result).toEqual(new MissingParamError('param'))
+    expect(result).toEqual(new MissingParamError('paramRequired'))
+  })
+  test('Should not return if validation succeds', async () => {
+    const { sut } = makeSut('name')
+    const input = makeFakeInput()
+    const result = await sut.validate(input)
+    expect(result).toBeFalsy()
   })
   test('Should throw if email validator throws', async () => {
-    const { sut } = makeSut()
+    const { sut } = makeSut('paramRequired')
     jest.spyOn(sut, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
