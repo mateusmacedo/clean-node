@@ -12,7 +12,7 @@ export class CompareFieldValidation implements Validation {
 
   async validate (input: any): Promise<Error> {
     if (input[this.fieldName] !== input[this.fieldToCompareName]) {
-      return new Promise(resolve => resolve(new InvalidParamError(this.fieldName)))
+      return new Promise(resolve => resolve(new InvalidParamError(this.fieldToCompareName)))
     }
   }
 }
