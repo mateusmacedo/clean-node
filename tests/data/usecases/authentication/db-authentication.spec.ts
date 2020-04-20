@@ -7,16 +7,16 @@ interface SutTypes {
   sut: Authentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
-
+const makeFakeAccount = (): AccountModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'any_password'
+})
 const makeLoadAccountByEmailRepositoryStubSut = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async load (email: string): Promise<AccountModel> {
-      const account: AccountModel = {
-        id: 'any_value',
-        name: 'any_value',
-        email: 'any_value@email.com',
-        password: 'any_value'
-      }
+      const account: AccountModel = makeFakeAccount()
       return new Promise(resolve => resolve(account))
     }
   }
