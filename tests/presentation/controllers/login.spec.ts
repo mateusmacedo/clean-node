@@ -5,7 +5,7 @@ import { badRequest, okRequest, serverError } from '../../../src/presentation/he
 
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password: string): Promise<string> {
+    async auth (authenticationModel): Promise<string> {
       return new Promise(resolve => resolve('any_value'))
     }
   }
@@ -75,7 +75,7 @@ describe('Login Controller', () => {
     const request = makeFakeHttpRequest()
     const { email, password } = request.body
     await sut.handler(request)
-    expect(authSpy).toHaveBeenCalledWith(email, password)
+    expect(authSpy).toHaveBeenCalledWith({ email, password })
   })
   test('Should return 401 if an invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut()
