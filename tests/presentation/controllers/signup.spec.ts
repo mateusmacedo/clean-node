@@ -11,7 +11,7 @@ import {
   badRequest,
   createdRequest,
   serverError
-} from '../../../src/presentation/helpers/http-helper'
+} from '../../../src/presentation/helpers/http-response-helper'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
