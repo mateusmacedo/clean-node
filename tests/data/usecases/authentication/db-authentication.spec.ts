@@ -1,8 +1,13 @@
-import { HashCompare, TokenGenerator } from '../../../../src/data/protocols/criptography'
-import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '../../../../src/data/protocols/db'
 import { DbAuthentication } from '../../../../src/data/usecases/authentication/db-authentication'
+import {
+  Authentication,
+  AuthenticationModel,
+  HashCompare,
+  LoadAccountByEmailRepository,
+  TokenGenerator,
+  UpdateAccessTokenRepository
+} from '../../../../src/data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '../../../../src/domain/models/account'
-import { Authentication, AuthenticationModel } from '../../../../src/domain/usercases'
 
 interface SutTypes {
   sut: Authentication
