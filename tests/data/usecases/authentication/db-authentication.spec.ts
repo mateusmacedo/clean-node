@@ -4,7 +4,7 @@ import {
   AuthenticationModel,
   HashCompare,
   LoadAccountByEmailRepository,
-  TokenGenerator,
+  Encrypter,
   UpdateAccessTokenRepository
 } from '../../../../src/data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '../../../../src/domain/models/account'
@@ -13,7 +13,7 @@ interface SutTypes {
   sut: Authentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashCompare
-  tokenGeneratorStub: TokenGenerator
+  encrypterStub: Encrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
@@ -36,14 +36,14 @@ const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
   return new UpdateAccessTokenRepositoryStub()
 }
 
-const makeTokenGeneratorStub = (): TokenGenerator => {
-  class TokenGeneratorStub implements TokenGenerator {
-    async generate (id: string): Promise<string> {
+const makeEncrypterStub = (): Encrypter => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }
 
-  return new TokenGeneratorStub()
+  return new EncrypterStub()
 }
 
 const makeHashCompareStub = (): HashCompare => {
@@ -69,11 +69,11 @@ const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository =>
 
 const makeSut = (): SutTypes => {
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepositoryStub()
-  const tokenGeneratorStub = makeTokenGeneratorStub()
+  const encrypterStub = makeEncrypterStub()
   const hashCompareStub = makeHashCompareStub()
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepositoryStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub, updateAccessTokenRepositoryStub)
-  return { sut, loadAccountByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub, updateAccessTokenRepositoryStub }
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub, encrypterStub, updateAccessTokenRepositoryStub)
+  return { sut, loadAccountByEmailRepositoryStub, hashCompareStub, encrypterStub, updateAccessTokenRepositoryStub }
 }
 
 describe('DbAuthentication use case', () => {
@@ -117,15 +117,15 @@ describe('DbAuthentication use case', () => {
     const result = await sut.auth(makeFakeAuthenticationModel())
     expect(result).toBeNull()
   })
-  test('Should call TokenGenerator with correct id', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
-    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+  test('Should call Encrypter with correct id', async () => {
+    const { sut, encrypterStub } = makeSut()
+    const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
     await sut.auth(makeFakeAuthenticationModel())
-    expect(generateSpy).toHaveBeenCalledWith(makeFakeAccount().id)
+    expect(encryptSpy).toHaveBeenCalledWith(makeFakeAccount().id)
   })
-  test('Should throw error if TokenGenerator throws', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
-    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(
+  test('Should throw error if Encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(
       new Promise((resolve, reject) => reject(new Error()))
     )
     const promise = sut.auth(makeFakeAuthenticationModel())
@@ -138,8 +138,8 @@ describe('DbAuthentication use case', () => {
   })
   test('Should call UpdateAccessTokenRepository with correct token', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    const generateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
     const accessToken = await sut.auth(makeFakeAuthenticationModel())
-    expect(generateSpy).toHaveBeenCalledWith(makeFakeAccount().id, accessToken)
+    expect(updateSpy).toHaveBeenCalledWith(makeFakeAccount().id, accessToken)
   })
 })
