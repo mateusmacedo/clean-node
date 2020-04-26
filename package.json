@@ -26,6 +26,7 @@
     "@types/supertest": "^2.0.8",
     "@types/validator": "^12.0.1",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@types/jsonwebtoken": "^8.3.9",
     "eslint": "^6.8.0",
     "eslint-config-standard-with-typescript": "^14.0.0",
     "eslint-plugin-import": "^2.20.2",
@@ -49,6 +50,7 @@
     "fast-glob": "^3.2.2",
     "mongodb": "^3.5.5",
     "validator": "^13.0.0",
-    "dotenv": "latest"
+    "dotenv": "latest",
+    "jsonwebtoken": "^8.5.1"
   }
 }
