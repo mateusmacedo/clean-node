@@ -28,7 +28,7 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async update (id: string, accessToken: string): Promise<void> {
+    async updateAccessToken (id: string, accessToken: string): Promise<void> {
       return new Promise(resolve => resolve())
     }
   }
@@ -138,7 +138,7 @@ describe('DbAuthentication use case', () => {
   })
   test('Should call UpdateAccessTokenRepository with correct token', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     const accessToken = await sut.auth(makeFakeAuthenticationModel())
     expect(updateSpy).toHaveBeenCalledWith(makeFakeAccount().id, accessToken)
   })
