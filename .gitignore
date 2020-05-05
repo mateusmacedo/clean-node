@@ -4,3 +4,4 @@ dist
 coverage
 docker/volumes
 .env
+.run
