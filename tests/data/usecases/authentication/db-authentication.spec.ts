@@ -5,7 +5,7 @@ import {
   HashCompare,
   LoadAccountByEmailRepository,
   Encrypter,
-  UpdateAccessTokenRepository
+  UpdateAccountAccessTokenRepository
 } from '../../../../src/data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '../../../../src/domain/models/account'
 
@@ -14,7 +14,7 @@ interface SutTypes {
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashCompare
   encrypterStub: Encrypter
-  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
+  updateAccessTokenRepositoryStub: UpdateAccountAccessTokenRepository
 }
 
 const makeFakeAuthenticationModel = (): AuthenticationModel => ({ email: 'any_value@email', password: 'any_value' })
@@ -26,8 +26,8 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'hashed_password'
 })
 
-const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
+const makeUpdateAccessTokenRepositoryStub = (): UpdateAccountAccessTokenRepository => {
+  class UpdateAccessTokenRepositoryStub implements UpdateAccountAccessTokenRepository {
     async updateAccessToken (id: string, accessToken: string): Promise<void> {
       return new Promise(resolve => resolve())
     }
@@ -136,7 +136,7 @@ describe('DbAuthentication use case', () => {
     const accessToken = await sut.auth(makeFakeAuthenticationModel())
     expect(accessToken).toBe('any_token')
   })
-  test('Should call UpdateAccessTokenRepository with correct token', async () => {
+  test('Should call UpdateAccountAccessTokenRepository with correct token', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     const accessToken = await sut.auth(makeFakeAuthenticationModel())

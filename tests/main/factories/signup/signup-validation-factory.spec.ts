@@ -1,10 +1,10 @@
-import { makeSignUpValidation } from '../../../src/main/factories/signup/signup-validation'
-import { Validation } from '../../../src/presentation/protocols/validation'
-import { CompareFieldValidation, EmailValidation, RequiredFieldValidation, ValidationComposite } from '../../../src/presentation/validation'
+import { makeSignUpValidation } from '../../../../src/main/factories/signup/signup-validation-factory'
+import { Validation } from '../../../../src/presentation/protocols'
+import { CompareFieldValidation, EmailValidation, RequiredFieldValidation, ValidationComposite } from '../../../../src/presentation/validation'
 
-import { EmailValidatorAdapter } from '../../../src/utils/email-validator-adapter'
+import { EmailValidatorAdapter } from '../../../../src/main/adapters/email-validator-adapter'
 
-jest.mock('../../../src/presentation/validation/validation-composite')
+jest.mock('../../../../src/presentation/validation/validation-composite')
 
 const makeFakeValidationData = (): any => ({
   name: 'any_name',

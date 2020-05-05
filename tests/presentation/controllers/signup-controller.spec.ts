@@ -1,11 +1,11 @@
-import { SignUpController } from '../../../src/presentation/controllers/signup/signup'
+import { SignUpController } from '../../../src/presentation/controllers/signup/signup-controller'
 import {
   AccountModel,
   AddAccount,
   AddAccountModel,
   HttpRequest,
   Validation
-} from '../../../src/presentation/controllers/signup/signup-protocols'
+} from '../../../src/presentation/controllers/signup/signup--controller-protocols'
 import { ServerError } from '../../../src/presentation/erros'
 import {
   badRequest,

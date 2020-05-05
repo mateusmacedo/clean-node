@@ -1,5 +1,5 @@
-import { LoginController } from '../../../src/presentation/controllers/login/login'
-import { Authentication, HttpRequest, Validation } from '../../../src/presentation/controllers/login/login-protocols'
+import { LoginController } from '../../../src/presentation/controllers/login/login-controller'
+import { Authentication, HttpRequest, Validation } from '../../../src/presentation/controllers/login/login--controller-protocols'
 import { ServerError, UnauthorizedError } from '../../../src/presentation/erros'
 import { badRequest, okRequest, serverError } from '../../../src/presentation/helpers/http-response-helper'
 
