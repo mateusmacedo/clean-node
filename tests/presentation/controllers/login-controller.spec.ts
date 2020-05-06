@@ -1,7 +1,16 @@
+import {
+  Authentication,
+  HttpRequest,
+  Validation
+} from '../../../src/presentation/controllers/login/login--controller-protocols'
 import { LoginController } from '../../../src/presentation/controllers/login/login-controller'
-import { Authentication, HttpRequest, Validation } from '../../../src/presentation/controllers/login/login--controller-protocols'
-import { ServerError, UnauthorizedError } from '../../../src/presentation/erros'
-import { badRequest, okRequest, serverError } from '../../../src/presentation/helpers/http-response-helper'
+import { ServerError } from '../../../src/presentation/erros'
+import {
+  badRequest,
+  okRequest,
+  serverError,
+  unauthorizedRequest
+} from '../../../src/presentation/helpers/http-response-helper'
 
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -83,7 +92,7 @@ describe('Login Controller', () => {
       .mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const request = makeFakeHttpRequest()
     const response = await sut.handler(request)
-    expect(response).toEqual(badRequest(new UnauthorizedError()))
+    expect(response).toEqual(unauthorizedRequest())
   })
   test('Should return 500 if authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
