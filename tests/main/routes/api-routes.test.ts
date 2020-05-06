@@ -48,5 +48,14 @@ describe('Api Routes', () => {
           password: fakeAddAccountModel.password
         }).expect(200)
     })
+    test('Should return 401 if invalid credentials', async () => {
+      const fakeAddAccountModel = makeFakeAddAccount()
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: fakeAddAccountModel.email,
+          password: fakeAddAccountModel.password
+        }).expect(401)
+    })
   })
 })
