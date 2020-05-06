@@ -9,7 +9,8 @@ export default {
     port: process.env.PORT || 3000
   },
   security: {
-    salt: Number(process.env.SALT_DEFAULT)
+    salt: Number(process.env.SALT_DEFAULT),
+    jwtSecret: process.env.JWT_SECRET || '$EcR3t1w7'
   },
   infra: {
     noSql: {
