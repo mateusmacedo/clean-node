@@ -21,7 +21,7 @@ export const serverError = (error: Error): HttpResponse => ({
   body: new ServerError(error.stack)
 })
 
-export const unauthorizedError = (): HttpResponse => ({
+export const unauthorizedRequest = (): HttpResponse => ({
   statusCode: 401,
   body: new UnauthorizedError()
 })
