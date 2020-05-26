@@ -1,9 +1,9 @@
 import {
   Authentication,
   AuthenticationModel,
+  Encrypter,
   HashCompare,
   LoadAccountByEmailRepository,
-  Encrypter,
   UpdateAccountAccessTokenRepository
 } from './db-authentication-protocols'
 
@@ -22,7 +22,7 @@ export class DbAuthentication implements Authentication {
       if (isValidPassword) {
         const accessToken = await this.encrypter.encrypt(account.id)
         await this.updateAccessTokenRepository.updateAccessToken(account.id, accessToken)
-        return new Promise(resolve => resolve(accessToken))
+        return Promise.resolve(accessToken)
       }
     }
     return null

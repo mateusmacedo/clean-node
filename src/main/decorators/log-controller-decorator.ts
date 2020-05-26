@@ -9,6 +9,6 @@ export class LogControllerDecorator implements Controller {
     if (httpResponse.statusCode === 500) {
       await this.logErrorRepository.logError(httpResponse.body.stack)
     }
-    return new Promise(resolve => resolve(httpResponse))
+    return Promise.resolve(httpResponse)
   }
 }

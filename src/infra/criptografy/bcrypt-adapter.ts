@@ -9,7 +9,7 @@ export class BcryptAdapter implements Hasher, HashCompare {
 
   async hash (value: string): Promise<string> {
     const hashedValue = await bcrypt.hash(value, this.salt)
-    return new Promise(resolve => resolve(hashedValue))
+    return Promise.resolve(hashedValue)
   }
 
   async compare (value: string, hash: string): Promise<boolean> {
