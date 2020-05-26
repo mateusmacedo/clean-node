@@ -1,5 +1,23 @@
 version: "3"
 services:
+  ctsserver:
+    build: .
+    image: clean-node-api
+    hostname: ctsserver
+    container_name: ctsserver
+    restart: always
+    command: npm start
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - postgressql
+    expose:
+      - 3000
+    volumes:
+      - ./dist:/home/node/app/dist
+    networks:
+      net:
+        ipv4_address: 172.0.0.11
   postgressql:
     image: postgres
     hostname: postgressql

@@ -5,8 +5,10 @@
   "main": "index.js",
   "repository": "github:mateusmacedo/clean-node",
   "scripts": {
-    "start": "node .dist/main/server.js",
+    "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
+    "up": "npm run build && docker-compose up -d",
+    "down": "docker-compose down",
     "dev": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests",
