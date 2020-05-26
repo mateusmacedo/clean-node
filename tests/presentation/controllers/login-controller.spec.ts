@@ -2,7 +2,7 @@ import {
   Authentication,
   HttpRequest,
   Validation
-} from '../../../src/presentation/controllers/login/login--controller-protocols'
+} from '../../../src/presentation/controllers/login/login-controller-protocols'
 import { LoginController } from '../../../src/presentation/controllers/login/login-controller'
 import { ServerError } from '../../../src/presentation/erros'
 import {
