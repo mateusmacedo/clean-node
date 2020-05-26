@@ -110,6 +110,6 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse).toEqual(okRequest('any_value'))
+    expect(httpResponse).toEqual(okRequest({ accessToken: 'any_value' }))
   })
 })
