@@ -6,15 +6,17 @@ services:
     hostname: ctsserver
     container_name: ctsserver
     restart: always
-    command: npm start
+    command: npm run debug
     environment:
       NODE_ENV: production
     depends_on:
       - postgressql
     expose:
+      - 9222
       - 3000
     volumes:
-      - ./dist:/home/node/app/dist
+      - ./dist/:/home/node/app/dist/
+      - ./package.json:/home/node/app/package.json
     networks:
       net:
         ipv4_address: 172.0.0.11
