@@ -6,10 +6,11 @@ import {
   HttpRequest,
   Validation
 } from '../../../src/presentation/controllers/signup/signup--controller-protocols'
-import { ServerError } from '../../../src/presentation/erros'
+import { EmailAlreadyInUseError, ServerError } from '../../../src/presentation/erros'
 import {
   badRequest,
   createdRequest,
+  forbidden,
   serverError
 } from '../../../src/presentation/helpers/http-response-helper'
 
@@ -113,6 +114,14 @@ describe('User Controller', () => {
     const httpResponse = await sut.handler(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse).toEqual(serverError(new ServerError('any_stack_error')))
+  })
+  test('Should return 403 if addAccount email provided already in use', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null))
+    const httpRequest = makeFakeHttpRequest()
+    const httpResponse = await sut.handler(httpRequest)
+    expect(httpResponse.statusCode).toBe(403)
+    expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError()))
   })
   test('Should return 201 if valid data is provided', async () => {
     const { sut } = makeSut()
