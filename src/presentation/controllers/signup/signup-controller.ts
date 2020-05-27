@@ -1,8 +1,10 @@
-import { badRequest, createdRequest, serverError } from '../../helpers/http-response-helper'
+import { EmailAlreadyInUseError } from '../../erros'
+import { badRequest, createdRequest, forbidden, serverError } from '../../helpers/http-response-helper'
 import { AddAccount, Controller, HttpRequest, HttpResponse, Validation } from './signup--controller-protocols'
 
 export class SignUpController implements Controller {
-  constructor (private readonly addAccount: AddAccount, private readonly validation: Validation) {}
+  constructor (private readonly addAccount: AddAccount, private readonly validation: Validation) {
+  }
 
   async handler (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -12,6 +14,9 @@ export class SignUpController implements Controller {
       }
       const { name, email, password } = httpRequest.body
       const account = await this.addAccount.add({ name, email, password })
+      if (!account) {
+        return forbidden(new EmailAlreadyInUseError())
+      }
       return createdRequest(account)
     } catch (e) {
       // @todo log and error control system
