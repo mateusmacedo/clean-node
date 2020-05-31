@@ -30,10 +30,9 @@ const makeFakeAccountData = (): AddAccountModel => ({
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
     async hash (value: string): Promise<string> {
-      return new Promise(resolve => resolve('hashed_password'))
+      return Promise.resolve('hashed_password')
     }
   }
-
   return new HasherStub()
 }
 
@@ -41,21 +40,18 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = makeFakeAccount()
-      return new Promise(resolve => resolve(fakeAccount))
+      return Promise.resolve(fakeAccount)
     }
   }
-
   return new AddAccountRepositoryStub()
 }
 
 const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
-      const account: AccountModel = makeFakeAccount()
-      return new Promise(resolve => resolve(account))
+      return Promise.resolve(null)
     }
   }
-
   return new LoadAccountByEmailRepositoryStub()
 }
 
