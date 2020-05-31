@@ -1,3 +1,4 @@
+import { LoadAccountByEmailRepository } from '../../../../src/data/protocols/db'
 import { DbAddAccount } from '../../../../src/data/usecases/add-account/db-add-account'
 import {
   AddAccountModel,
@@ -10,6 +11,7 @@ interface SutTypes {
   sut: DbAddAccount
   hasherStub: Hasher
   addAccountRepositoryStub: AddAccountRepository
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 const makeFakeAccount = (): AccountModel => ({
@@ -46,11 +48,23 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   return new AddAccountRepositoryStub()
 }
 
+const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+    async loadByEmail (email: string): Promise<AccountModel> {
+      const account: AccountModel = makeFakeAccount()
+      return new Promise(resolve => resolve(account))
+    }
+  }
+
+  return new LoadAccountByEmailRepositoryStub()
+}
+
 const makeSut = (): SutTypes => {
   const hasherStub = makeHasher()
   const addAccountRepositoryStub = makeAddAccountRepository()
-  const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub)
-  return { sut, hasherStub, addAccountRepositoryStub }
+  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepositoryStub()
+  const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
+  return { sut, hasherStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub }
 }
 
 describe('DbAddAccount UseCase', () => {
@@ -89,5 +103,12 @@ describe('DbAddAccount UseCase', () => {
     const accountData = makeFakeAccountData()
     const account = await sut.add(accountData)
     expect(account).toEqual(makeFakeAccount())
+  })
+  test('Should call LoadAccountByEmailRepository with correct values', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+    const accountData = makeFakeAccountData()
+    await sut.add(accountData)
+    expect(loadSpy).toHaveBeenCalledWith(accountData.email)
   })
 })

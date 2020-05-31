@@ -2,9 +2,9 @@ import { DbAuthentication } from '../../../../src/data/usecases/authentication/d
 import {
   Authentication,
   AuthenticationModel,
+  Encrypter,
   HashCompare,
   LoadAccountByEmailRepository,
-  Encrypter,
   UpdateAccountAccessTokenRepository
 } from '../../../../src/data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '../../../../src/domain/models/account'
@@ -76,7 +76,7 @@ const makeSut = (): SutTypes => {
   return { sut, loadAccountByEmailRepositoryStub, hashCompareStub, encrypterStub, updateAccessTokenRepositoryStub }
 }
 
-describe('DbAuthentication use case', () => {
+describe('DbAuthentication UseCase', () => {
   test('Should call LoadAccountByEmailRepository with correct values', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
